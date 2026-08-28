@@ -1,13 +1,11 @@
 # Стол — калькулятор мафии
 
-Один HTML-файл, без сервера. Открывается через htmlpreview.
+Один HTML-файл (~64 КБ), без React и без внешних скриптов. Открывается в htmlpreview.
 
-## Открыть на телефоне
+## Открыть
 
 https://htmlpreview.github.io/?https://github.com/YODARkiss/mafia-balance-calc/blob/main/index.html
 
-Репозиторий: https://github.com/YODARkiss/mafia-balance-calc
+Если кэш: https://htmlpreview.github.io/?https://github.com/YODARkiss/mafia-balance-calc/blob/main/index.html&v=16
 
-Документация формул: [DOCS.md](DOCS.md)
-
-Версия: 2026-08-29 — один файл (как раньше), тайминг маньяка, состав ролей.
+Документация: [DOCS.md](DOCS.md)
