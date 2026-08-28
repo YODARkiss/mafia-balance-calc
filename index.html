@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Стол v9 — ритм важнее</title>
+<html lang="ru"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Стол v10</title>
 <style>
-:root{--bg:#16110e;--panel:#231c18;--line:#3b322b;--gold:#e0c48a;--town:#7dcea0;--mafia:#e07470;--muted:#9a8f84;--text:#f3eee7;--ok:#1d2a22;--bad:#2a2116}
+:root{--bg:#16110e;--panel:#231c18;--line:#3b322b;--gold:#e0c48a;--town:#7dcea0;--muted:#9a8f84;--text:#f3eee7;--ok:#1d2a22;--bad:#2a2116;--dim:#6a6158}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.4}
 .wrap{max-width:640px;margin:0 auto;padding:16px 14px 40px}h1{margin:0 0 4px;font-size:1.2rem;color:var(--gold)}
 .sub{color:var(--muted);font-size:.9rem;margin:0 0 14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
@@ -14,7 +11,8 @@ label{display:block;color:var(--muted);font-size:.82rem;margin:8px 0 4px}
 input[type=number],select{width:100%;background:#1b1613;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:9px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .chk{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #2c2621}
-.chk input{width:20px;height:20px;margin-top:2px;flex-shrink:0}.chk b{display:block}.delta{font-size:.78rem;color:var(--muted)}
+.chk.off b,.chk.off .delta{color:var(--dim)}.chk input{width:20px;height:20px;margin-top:2px;flex-shrink:0}.chk b{display:block}
+.delta{font-size:.8rem;margin-top:2px}.delta.on{color:var(--town)}.delta.off{color:var(--dim)}
 .stepper{display:flex;gap:8px;align-items:center}.stepper button{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:#2a231e;color:var(--text);font-size:1.2rem}
 .track{position:relative;height:84px;margin:16px 4px 8px}.rail{position:absolute;left:0;right:0;top:30px;height:6px;border-radius:3px;background:#3a322c}
 .tick{position:absolute;top:22px;width:8px;height:22px;margin-left:-4px;background:var(--gold);border-radius:2px}
@@ -25,52 +23,57 @@ input[type=number],select{width:100%;background:#1b1613;color:var(--text);border
 .stat{background:#1b1613;border:1px solid var(--line);border-radius:10px;padding:10px}.stat .k{color:var(--muted);font-size:.7rem;text-transform:uppercase}.stat .v{font-size:1.15rem;color:var(--gold)}
 .hint{color:var(--muted);font-size:.8rem}.rec{border-radius:10px;padding:10px;margin:8px 0;border:1px solid var(--line)}
 .rec.ok{background:var(--ok);border-color:#2e4a38}.rec.warn{background:var(--bad);border-color:#5a4324;color:#e8a54b}
-button.primary{width:100%;border:0;border-radius:10px;padding:11px;background:var(--gold);color:#1a140f;font-weight:650;margin-top:8px}a.doc{color:var(--gold)}
+button.primary{width:100%;border:0;border-radius:10px;padding:11px;background:var(--gold);color:#1a140f;font-weight:650;margin-top:8px}a.doc{color:var(--gold)}details{margin-top:8px}summary{color:var(--gold);cursor:pointer}
 </style></head><body>
-<div class="wrap"><h1>Стол v9</h1>
-<p class="sub">Сначала ритм в «норму», сила — размыто. <a class="doc" href="https://github.com/YODARkiss/mafia-balance-calc/blob/main/DOCS.md">Документация</a></p>
+<div class="wrap"><h1>Стол v10</h1>
+<p class="sub">На слоте ритм и сила. Выключено — серым. <a class="doc" href="https://github.com/YODARkiss/mafia-balance-calc/blob/main/DOCS.md">Документация</a></p>
 <div class="card"><h2>Стол</h2><div class="grid2"><div><label>Игроков</label><input id="n" type="number" min="7" max="20" value="12"/></div><div><label>Секунд на речь</label><input id="speech" type="number" min="20" max="120" value="60"/></div></div>
 <label>Мафия</label><div class="stepper"><button id="m-">−</button><b id="mval">3</b><button id="m+">+</button></div>
 <label>Третья сторона</label>
 <select id="third"><option value="0">нет</option><option value="1" selected>1 — маньяк</option><option value="2">2 — якудза</option></select>
-<button class="primary" id="club">Клубный состав</button></div>
-<div class="card"><h2>Слоты (по одному)</h2><div id="slots"></div></div>
+<button class="primary" id="club">Как в Синдикате</button><p class="hint" id="clubhint"></p></div>
+<div class="card"><h2>Кого добавить</h2><div id="slots"></div></div>
 <div class="card" id="out"></div></div>
 <script>
 const S={n:12,speech:60,mafia:3,third:1,sheriff:true,don:true,putana:true,doctor:false,lucky:false};
 const $=id=>document.getElementById(id);const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 function clubM(n){return n<=10?2:n<=12?3:4}
 function civ(){return Math.max(0,S.n-(S.mafia+(S.sheriff?1:0)+(S.doctor?1:0)+(S.putana?1:0)+S.third))}
-function slotDeltas(){const man=S.third>=1;const putP=S.mafia/Math.max(1,S.n-1);
-const putForce=man?0.2:+(0.3+putP*0.65).toFixed(2);const putTime=man?+(0.35+putP*0.25).toFixed(2):+(putP*1.2).toFixed(2);
-return{sheriff:{on:"ритм короче · город сильнее",off:"ритм длиннее · город слабее"},don:{on:"чуть быстрее чёрные",off:"проще новичкам"},
-putana:{on:man?`ритм +${putTime} · сила слабая (+${putForce}): не знает кого усмирила`:`ритм +${putTime} · город +${putForce}`,off:"ночь громче"},
-doctor:{on:"ритм +0.4 · не себя и не того же подряд",off:"короче, меньше сейвов"},lucky:{on:"+1 сорванная ночь",off:"без одноразового сейва"}}}
-function drawSlots(){const d=slotDeltas();$("slots").innerHTML=[["sheriff","Шериф"],["don","Дон"],["putana","Путана / красотка"],["doctor","Доктор"],["lucky","Везунчик"]].map(([id,name])=>`<label class="chk"><input type="checkbox" data-k="${id}" ${S[id]?"checked":""}/><span><b>${name}</b><span class="delta">${S[id]?d[id].on:d[id].off}</span></span></label>`).join("")}
-function timeForRounds(N,R,nightSec){R=Math.max(1,R);let talk=0;for(let d=1;d<=R;d++)talk+=Math.max(3,N-1-2*(d-1))*S.speech;return Math.round((80+talk+R*(120+45)+(R+1)*nightSec)/60)}
+function deltas(){const man=S.third>=1,N=S.n,M=S.mafia,pM=M/Math.max(1,N-1);
+const pTwo=man?Math.max(0,(N-M-2)/Math.max(1,N-1)):0;
+const putForce=man?+(0.25+pTwo*0.45).toFixed(2):+(0.3+pM*0.65).toFixed(2);
+const putTime=man?+(0.4+pM*0.2).toFixed(2):+(pM*1.15).toFixed(2);
+return{sheriff:{t:"ритм −",f:"сила ++",why:"город сильнее, партия короче"},don:{t:"ритм ≈",f:"сила −",why:"ищет шерифа"},
+putana:{t:"ритм +"+putTime,f:"сила +"+putForce,why:man?`2 трупа (~${(pTwo*100).toFixed(0)}%) — её цель мирный`:`может закрыть мафию и подсказать`},
+doctor:{t:"ритм +0.4",f:"сила +"+(S.putana?0.22:0.38),why:S.putana?"с путаной тишина двусмысленна":"тихая ночь: спасённый был под пулей"},
+lucky:{t:"ритм +0.5",f:"сила +",why:"один сейв"}}}
+function drawSlots(){const d=deltas(),names={sheriff:"Шериф",don:"Дон",putana:"Путана / красотка",doctor:"Доктор",lucky:"Везунчик"};
+$("slots").innerHTML=Object.keys(names).map(id=>{const on=S[id],x=d[id];return `<label class="chk ${on?"":"off"}"><input type="checkbox" data-k="${id}" ${on?"checked":""}/><span><b>${names[id]}</b><div class="delta ${on?"on":"off"}">${x.t} · ${x.f}${on?"":"  (если включить)"}</div><div class="hint">${x.why}</div></span></label>`}).join("")}
+function timeForRounds(N,R,ns){R=Math.max(1,R);let t=0;for(let d=1;d<=R;d++)t+=Math.max(3,N-1-2*(d-1))*S.speech;return Math.round((80+t+R*165+(R+1)*ns)/60)}
 function model(){const N=S.n,M=S.mafia,man=S.third>=1,yak=S.third===2,extra=man||yak?1:0,T=N-M-S.third;
-const minR=Math.max(1,Math.ceil((T-M)/(1+extra+1))),parity=Math.max(minR,T-M),voteCap=N-3;
-let stall=0;if(S.lucky)stall+=1;if(S.doctor)stall+=1.96;if(S.putana&&extra)stall+=0.4;if(extra&&M)stall+=0.3;
+const minR=Math.max(1,Math.ceil((T-M)/(2+extra))),parity=Math.max(minR,T-M),voteCap=N-3;
+let stall=(S.lucky?1:0)+(S.doctor?1.9:0)+(S.putana&&extra?0.45:0)+(extra&&M?0.3:0);
 const maxR=clamp(+(Math.min(voteCap,parity+stall+0.8)).toFixed(1),parity,voteCap);
-let rounds=parity;if(S.putana){const p=M/Math.max(1,N-1);rounds+=extra?0.35+p*0.25:p*1.15}if(S.doctor)rounds+=0.4;if(S.lucky)rounds+=0.5;if(S.sheriff)rounds-=1.05;if(extra)rounds-=1.2;
+const d=deltas();let rounds=parity;if(S.putana)rounds+=parseFloat(String(d.putana.t).replace("ритм +",""))||0.5;if(S.doctor)rounds+=0.4;if(S.lucky)rounds+=0.5;if(S.sheriff)rounds-=1.05;if(extra)rounds-=1.2;
 rounds=clamp(+rounds.toFixed(2),minR,maxR);
-let p=clubM(N)-M;if(S.sheriff)p+=0.85;if(S.putana)p+=extra?0.2:(0.3+M/Math.max(1,N-1)*0.65);if(S.doctor)p+=0.28;if(S.lucky)p+=0.2;if(S.don)p-=0.15;if(man)p-=0.45;if(yak)p-=0.7;
+let p=clubM(N)-M;if(S.sheriff)p+=0.85;if(S.putana)p+=parseFloat(String(d.putana.f).replace("сила +",""))||0.4;if(S.doctor)p+=S.putana?0.22:0.38;if(S.lucky)p+=0.2;if(S.don)p-=0.15;if(man)p-=0.45;if(yak)p-=0.7;
 const force=p>0.55?"город жирнее":p<-0.55?"город под прессом":"примерно ровно";
-const nightSec=40+(S.putana?15:0)+22+(S.don?10:0)+(S.doctor?15:0)+(S.sheriff?18:0)+(extra?18:0);
-const tMin=timeForRounds(N,minR,nightSec),tPar=timeForRounds(N,parity,nightSec),tExp=timeForRounds(N,rounds,nightSec),tMax=timeForRounds(N,maxR,nightSec);
-let tempo="норма";if(tExp<38)tempo="блиц";else if(tExp<48)tempo="коротко";else if(tExp<=72)tempo="норма";else if(tExp<=88)tempo="длинно";else tempo="марафон";
-return{N,M,minR,parity,maxR,rounds,force,tempo,tMin,tPar,tExp,tMax}}
-function recs(m){const out=[];if(m.tempo!=="норма"){if(m.tempo==="блиц"||m.tempo==="коротко"){out.push({cls:"warn",t:"Главное — растянуть ритм",x:"Снимите третью сторону или −1 мафия."});if(S.third)out.push({cls:"warn",t:"Убрать маньяка/якудзу",x:"Блиц уехал из-за второй пули."});else if(m.M>=4&&m.N<=12)out.push({cls:"warn",t:"3 мафии",x:"На 12 блиц с четвёркой."})}else{out.push({cls:"warn",t:"Главное — сжать ритм",x:"Речь 45с или −доктор."});if(S.doctor&&S.putana)out.push({cls:"warn",t:"Доктор или путана",x:"Вместе раздувают вечер."})}}else out.push({cls:"ok",t:"Ритм в норме",x:`Ожидание ${m.tExp} мин. Силу трогайте только если криво.`});
-if(m.force==="город под прессом")out.push({cls:"warn",t:"Город под прессом",x:"Не 4 мафии + третья сторона на 12. Путана с маньяком — глушитель хаоса."});
-else if(m.force==="город жирнее"&&m.tempo==="норма")out.push({cls:"ok",t:"Город жирнее",x:"Можно одну третью сторону. Не +доктор."});
-else if(m.tempo==="норма")out.push({cls:"ok",t:"Сила примерно ровно",x:"Оставьте."});
-if(S.putana&&S.third)out.push({cls:"ok",t:"Связка путана + маньяк",x:"Не знает кого усмирила, городу не подскажет. Иногда срывает второе убийство."});
-return out.slice(0,5)}
+const ns=40+(S.putana?15:0)+22+(S.don?10:0)+(S.doctor?15:0)+(S.sheriff?18:0)+(extra?18:0);
+const tExp=timeForRounds(N,rounds,ns);let tempo="норма";if(tExp<38)tempo="блиц";else if(tExp<48)tempo="коротко";else if(tExp<=72)tempo="норма";else if(tExp<=88)tempo="длинно";else tempo="марафон";
+return{minR,parity,maxR,rounds,force,tempo,tMin:timeForRounds(N,minR,ns),tPar:timeForRounds(N,parity,ns),tExp,tMax:timeForRounds(N,maxR,ns)}}
+function recs(m){const o=[];if(m.tempo!=="норма"){if(m.tempo==="блиц"||m.tempo==="коротко")o.push({c:"warn",t:"Растянуть ритм",x:"Серые плюсы на слотах: путана/доктор. Или −третья сторона."});else o.push({c:"warn",t:"Сжать ритм",x:"Речь 45с или снимите слот с «ритм +»."})}else o.push({c:"ok",t:"Ритм в норме",x:m.tExp+" мин."});
+if(S.putana&&S.third)o.push({c:"ok",t:"Путана + маньяк",x:"2 трупа — её цель мирный. 1 труп — закрыла убийцу, но кого — не ясно."});
+if(S.doctor&&!S.putana)o.push({c:"ok",t:"Доктор без путаны",x:"Тихая ночь: спасённый был под пулей."});
+if(S.doctor&&S.putana)o.push({c:"ok",t:"Доктор + путана",x:"Тишина двусмысленна."});return o.slice(0,5)}
 function pct(v,a,b){return ((v-a)/Math.max(0.01,b-a))*100}
-function calc(){$("mval").textContent=S.mafia;drawSlots();const m=model();
-const marks=[[m.minR,`блиц ${m.minR} · ${m.tMin}м`],[m.parity,`пар. ${m.parity} · ${m.tPar}м`],[m.maxR,`пот. ${m.maxR} · ${m.tMax}м`]];
-let th="";marks.forEach(([v,l])=>{th+=`<div class="tick" style="left:${pct(v,m.minR,m.maxR)}%"></div><div class="lab" style="left:${pct(v,m.minR,m.maxR)}%">${l}</div>`});
-$("out").innerHTML=`<h2>Ритм — главное</h2><div class="grid2"><div class="stat"><div class="k">Ожидание</div><div class="v">${m.tExp} мин</div></div><div class="stat"><div class="k">Градация</div><div class="v">${m.tempo}</div></div></div><span class="band ${m.tempo==="норма"?"norm":"off"}">${m.tempo}</span><span class="band ${m.force==="примерно ровно"?"norm":"off"}">${m.force}</span><div class="track"><div class="rail"></div>${th}<div class="puck" style="left:${pct(m.rounds,m.minR,m.maxR)}%"></div></div><p class="hint">Фишка ${m.rounds.toFixed(1)} раунда. Блиц ${S.third?"со второй пулей":"только мафия"}.</p>${recs(m).map(x=>`<div class="rec ${x.cls}"><b>${x.t}</b><div class="hint">${x.x}</div></div>`).join("")}<p class="hint">Путана и доктор не ходят к одному дважды. <a class="doc" href="https://github.com/YODARkiss/mafia-balance-calc/blob/main/DOCS.md">DOCS.md</a></p>`}
-function bind(){$("n").onchange=()=>{S.n=clamp(+$("n").value,7,20);if(civ()<0)S.mafia=Math.max(2,S.mafia-1);calc()};$("speech").onchange=()=>{S.speech=clamp(+$("speech").value,20,120);calc()};$("third").onchange=()=>{S.third=+$("third").value;calc()};$("m-").onclick=()=>{S.mafia=Math.max(S.don?1:2,S.mafia-1);calc()};$("m+").onclick=()=>{S.mafia=Math.min(6,S.mafia+1);calc()};$("club").onclick=()=>{S.mafia=clubM(S.n);S.sheriff=true;S.don=S.n>=10;S.putana=S.n>=9;S.doctor=S.n>=13;S.lucky=false;S.third=S.n>=9?1:0;$("third").value=S.third;calc()};$("slots").onchange=e=>{if(e.target.dataset.k){S[e.target.dataset.k]=e.target.checked;calc()}}}
-bind();calc();
+function clubHint(){const n=S.n;if(n<=10)return "Синдикат 9–10: 2 мафии, шериф, путана, маньяк. Доктора нет.";if(n<=12)return "Синдикат 11–12: 3 мафии, шериф, путана, маньяк. Доктор только с 13 — поэтому кнопка его снимает.";return "Синдикат 13–15: 4 мафии, шериф, путана, доктор, маньяк."}
+function calc(){$("mval").textContent=S.mafia;$("clubhint").textContent=clubHint();drawSlots();const m=model();
+let th="";[[m.minR,`блиц ${m.minR} · ${m.tMin}м`],[m.parity,`пар. ${m.parity} · ${m.tPar}м`],[m.maxR,`пот. ${m.maxR} · ${m.tMax}м`]].forEach(([v,l])=>{th+=`<div class="tick" style="left:${pct(v,m.minR,m.maxR)}%"></div><div class="lab" style="left:${pct(v,m.minR,m.maxR)}%">${l}</div>`});
+$("out").innerHTML=`<h2>Ритм</h2><div class="grid2"><div class="stat"><div class="k">Ожидание</div><div class="v">${m.tExp} мин</div></div><div class="stat"><div class="k">Стол</div><div class="v">${m.tempo}</div></div></div><span class="band ${m.tempo==="норма"?"norm":"off"}">${m.tempo}</span><span class="band ${m.force==="примерно ровно"?"norm":"off"}">${m.force}</span><div class="track"><div class="rail"></div>${th}<div class="puck" style="left:${pct(m.rounds,m.minR,m.maxR)}%"></div></div>${recs(m).map(x=>`<div class="rec ${x.c}"><b>${x.t}</b><div class="hint">${x.x}</div></div>`).join("")}<details><summary>Цифры под капотом</summary><p class="hint">Раунды ${m.rounds.toFixed(1)} · блиц ${m.minR} · паритет ${m.parity} · потолок ${m.maxR} (${m.tMax} мин).</p></details>`}
+$("n").onchange=()=>{S.n=clamp(+$("n").value,7,20);if(civ()<0)S.mafia=Math.max(2,S.mafia-1);calc()};
+$("speech").onchange=()=>{S.speech=clamp(+$("speech").value,20,120);calc()};
+$("third").onchange=()=>{S.third=+$("third").value;calc()};
+$("m-").onclick=()=>{S.mafia=Math.max(S.don?1:2,S.mafia-1);calc()};$("m+").onclick=()=>{S.mafia=Math.min(6,S.mafia+1);calc()};
+$("club").onclick=()=>{S.mafia=clubM(S.n);S.sheriff=true;S.don=S.n>=10;S.putana=S.n>=9;S.doctor=S.n>=13;S.lucky=false;S.third=S.n>=9?1:0;$("third").value=S.third;calc()};
+$("slots").onchange=e=>{if(e.target.dataset.k){S[e.target.dataset.k]=e.target.checked;calc()}};calc();
 </script></body></html>
