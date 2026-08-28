@@ -1,110 +1,68 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Калькулятор баланса v3 — ведущий мафии</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Часы стола v4</title>
 <style>
-:root{--bg:#14110f;--felt:#1c1714;--panel:#221c18;--line:#3a3028;--gold:#d4b483;--gold2:#f0d9a8;--town:#7dcea0;--mafia:#e07470;--maniac:#c39bd3;--yakuza:#f0b429;--joker:#5dade2;--muted:#9a8f84;--text:#f4efe8;--warn:#e8a54b}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:radial-gradient(900px 420px at 20% -10%,#3a2a1c 0%,transparent 50%),var(--bg);color:var(--text);line-height:1.45}
-header{padding:18px 16px 6px;max-width:720px;margin:0 auto}header h1{margin:0 0 6px;font-size:1.25rem;color:var(--gold2)}header p{margin:0;color:var(--muted);font-size:.92rem}
-.wrap{max-width:720px;margin:0 auto;padding:8px 12px 36px}
+:root{--bg:#14110f;--felt:#1c1714;--panel:#221c18;--line:#3a3028;--gold:#d4b483;--gold2:#f0d9a8;--town:#7dcea0;--mafia:#e07470;--maniac:#c39bd3;--muted:#9a8f84;--text:#f4efe8}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:#14110f;color:var(--text);line-height:1.45}
+header,.wrap{max-width:720px;margin:0 auto;padding:16px}
+h1{margin:0 0 6px;font-size:1.25rem;color:var(--gold2)}.sub{color:var(--muted);font-size:.92rem}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px}
-.card h2{margin:0 0 10px;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
+h2{margin:0 0 10px;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)}
 label{display:block;font-size:.86rem;color:var(--muted);margin:10px 0 4px}
-select,input[type=number]{width:100%;background:var(--felt);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:1rem}
-.row{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2b241f;font-size:.92rem}.row:last-child{border-bottom:0}
-.toggle{width:40px;height:22px;border-radius:11px;background:#3a332c;position:relative;flex-shrink:0}.toggle.on{background:#6b5340}.toggle i{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#cfc3b5}.toggle.on i{left:21px;background:var(--gold2)}
-.hint{font-size:.78rem;color:var(--muted);margin-top:8px}
-button.primary{border:0;border-radius:10px;padding:12px;width:100%;margin-top:12px;background:var(--gold);color:#1a140f;font-weight:650;font-size:1rem}
-.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.role{background:var(--felt);border:1px solid var(--line);border-radius:10px;padding:8px}.role b{display:block;font-size:.9rem}.role .meta{color:var(--muted);font-size:.72rem}
-.stepper{display:flex;align-items:center;gap:8px;margin-top:6px}.stepper button{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:#2a231e;color:var(--text);font-size:1.2rem}
-.bar-lab{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:3px}.bar{height:10px;background:#2a231e;border-radius:6px;overflow:hidden;display:flex}.bar>i{display:block;height:100%}
-.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.stat{background:var(--felt);border:1px solid var(--line);border-radius:10px;padding:8px 10px}.stat .k{color:var(--muted);font-size:.7rem;text-transform:uppercase}.stat .v{font-size:1.15rem;color:var(--gold2)}
-.warn{background:#2a2116;border:1px solid #5a4324;color:var(--warn);border-radius:10px;padding:8px 10px;font-size:.88rem;margin:6px 0}.ok{background:#17231c;border:1px solid #2e4a38;color:var(--town);border-radius:10px;padding:8px 10px;font-size:.88rem;margin:6px 0}
-.deck{font-size:.95rem;background:var(--felt);border-radius:10px;padding:10px 12px;border:1px solid var(--line)}.deck b{color:var(--gold2)}
-.alt{font-size:.88rem;color:var(--muted);margin-top:8px}details{margin-top:10px}details summary{color:var(--gold)}
+input[type=number]{width:100%;background:var(--felt);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:1rem}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px}.role{background:var(--felt);border:1px solid var(--line);border-radius:10px;padding:8px}
+.stepper{display:flex;gap:8px;align-items:center;margin-top:6px}.stepper button{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:#2a231e;color:var(--text);font-size:1.2rem}
+.clock{background:var(--felt);border-radius:10px;padding:10px 12px;margin:8px 0;border:1px solid var(--line)}
+.clock .t{font-size:1.35rem;color:var(--gold2)}.clock .k{color:var(--muted);font-size:.78rem;text-transform:uppercase}
+.warn{background:#2a2116;border:1px solid #5a4324;color:#e8a54b;border-radius:10px;padding:8px 10px;font-size:.88rem;margin:6px 0}
+.ok{background:#17231c;border:1px solid #2e4a38;color:var(--town);border-radius:10px;padding:8px 10px;font-size:.88rem;margin:6px 0}
+.hint{color:var(--muted);font-size:.82rem}.meta{color:var(--muted);font-size:.72rem}
+button.primary{border:0;border-radius:10px;padding:12px;width:100%;margin-top:12px;background:var(--gold);color:#1a140f;font-weight:650}
 </style></head><body>
-<header><h1>Калькулятор баланса стола</h1>
-<p>Везунчик — мирный с ночным сейвом. Не уменьшает город.</p></header>
+<header><h1>Часы стола v4</h1>
+<p class="sub">Не «мафия всегда крадёт линч», а сколько ходов до победы, если сторона играет в свою силу.</p></header>
 <div class="wrap">
 <div class="card"><h2>Стол</h2>
-<label for="n">Игроков</label><input id="n" type="number" min="6" max="20" value="12" />
-<label for="exp">Опыт</label>
-<select id="exp"><option value="novice">Новички</option><option value="mixed">Смешанный</option><option value="exp" selected>Опытные</option></select>
-<label for="prio">Приоритет</label>
-<select id="prio"><option value="talk" selected>Разговор</option><option value="speed">Скорость</option></select>
-<label for="speech">Секунд на речь одного</label>
-<input id="speech" type="number" min="20" max="180" value="60" />
-</div>
-<div class="card"><h2>Правила</h2>
-<div class="row"><span>Шериф стреляет</span><div class="toggle on" data-k="sheriffShoot"><i></i></div></div>
-<div class="row"><span>Роли вскрываются</span><div class="toggle on" data-k="reveal"><i></i></div></div>
-<div class="row"><span>Дон скрыт от шерифа</span><div class="toggle on" data-k="donHidden"><i></i></div></div>
-<div class="row"><span>Путана без алиби</span><div class="toggle on" data-k="putanaNoAlibi"><i></i></div></div>
-<div class="row"><span>Мафия голосует сплочённо</span><div class="toggle on" data-k="mafiaBloc"><i></i></div></div>
-</div>
-<div class="card"><h2>Роли</h2>
-<div class="roles" id="roles"></div>
-<button class="primary" id="btn-rec">Рекомендованный состав</button>
-<div class="hint" id="seat-hint"></div></div>
-<div class="card"><h2>Прогноз</h2>
-<div class="deck" id="deck"></div>
-<div class="bar-lab" style="margin-top:12px"><span>Победы</span><span id="nsim">—</span></div>
-<div class="bar" id="pbar"></div>
-<div class="bar-lab" id="plab" style="color:#cfc3b5"></div>
-<div class="statgrid">
-<div class="stat"><div class="k">Время партии</div><div class="v" id="s-time">—</div></div>
-<div class="stat"><div class="k">Дней</div><div class="v" id="s-days">—</div></div>
-<div class="stat"><div class="k">Хаос ночи</div><div class="v" id="s-chaos">—</div></div>
-<div class="stat"><div class="k">Интрига</div><div class="v" id="s-intr">—</div></div>
-</div>
-<div id="warns"></div><div class="alt" id="alt"></div>
-<details><summary>Как считаются минуты и сплочённость</summary><div id="meth" class="hint"></div></details>
-</div></div>
+<label>Игроков</label><input id="n" type="number" min="6" max="20" value="12"/>
+<label>Секунд на речь</label><input id="speech" type="number" min="20" max="180" value="60"/>
+<button class="primary" id="rec">Состав как в городском клубе</button></div>
+<div class="card"><h2>Роли</h2><div class="roles" id="roles"></div><div class="hint" id="seats"></div></div>
+<div class="card" id="out"></div></div>
 <script>
-const ROLE_DEF=[{id:"mafia",name:"Мафия",max:6,info:"включая дона"},{id:"don",name:"Дон",max:1,info:"это мафия"},{id:"sheriff",name:"Шериф",max:1,info:"проверка/выстрел"},{id:"doctor",name:"Доктор",max:1,info:"сейв"},{id:"putana",name:"Путана",max:1,info:"блок"},{id:"maniac",name:"Маньяк",max:1,info:"3-я сторона"},{id:"yakuza",name:"Якудза",max:3,info:"2-я банда"},{id:"joker",name:"Джокер",max:1,info:"1-й день"},{id:"lucky",name:"Везунчик",max:1,info:"мирный, сейв от ночи"}];
-const state={n:12,exp:"exp",prio:"talk",speech:60,sheriffShoot:true,reveal:true,donHidden:true,putanaNoAlibi:true,mafiaBloc:true,roles:{mafia:3,don:1,sheriff:1,doctor:1,putana:1,maniac:0,yakuza:0,joker:0,lucky:0}};
+const DEFS=[{id:"mafia",name:"Мафия",max:6,info:"включая дона"},{id:"don",name:"Дон",max:1,info:"входит в мафию"},{id:"sheriff",name:"Шериф",max:1,info:"проверка, потом выстрел"},{id:"doctor",name:"Доктор",max:1,info:"сейв ночью"},{id:"putana",name:"Путана",max:1,info:"блок 1 из N-1"},{id:"maniac",name:"Маньяк",max:1,info:"сначала мафия"},{id:"lucky",name:"Везунчик",max:1,info:"мирный, сейв от 1 ночи"}];
+const S={n:12,speech:60,roles:{mafia:3,don:1,sheriff:1,doctor:0,putana:1,maniac:1,lucky:0}};
 const $=id=>document.getElementById(id);
-function civilians(){const r=state.roles;return Math.max(0,state.n-(r.mafia+r.sheriff+r.doctor+r.putana+r.maniac+r.yakuza+r.joker))}
-function recommend(){const n=state.n,exp=state.exp,shoot=state.sheriffShoot;const rec={mafia:2,don:0,sheriff:1,doctor:1,putana:0,maniac:0,yakuza:0,joker:0,lucky:0};let m=Math.round(n/3.5);if(shoot&&n>=11)m+=1;m=Math.max(2,Math.min(m,Math.floor((n-3)/2)));if(n<=8)m=2;if(n===10)m=3;if(n>=15&&!shoot)m=5;rec.mafia=m;if(exp==="exp"&&n>=10){rec.putana=1;rec.don=1}if(state.prio==="speed"&&n>=11){rec.maniac=1;rec.mafia=Math.max(2,rec.mafia-1)}if(exp==="novice"){rec.don=0;rec.putana=0;rec.maniac=state.prio==="speed"&&n>=13?1:0}if(exp==="mixed"){rec.don=0;rec.putana=0}state.roles=rec}
-function renderRoles(){$("roles").innerHTML=ROLE_DEF.map(d=>`<div class="role"><b>${d.name}</b><div class="meta">${d.info}</div><div class="stepper"><button data-dec="${d.id}">−</button><span>${state.roles[d.id]}</span><button data-inc="${d.id}">+</button></div></div>`).join("");$("seat-hint").textContent=`мирных ${civilians()}${state.roles.lucky?" в т.ч. везунчик":""} · всего ${state.n}`}
+function civ(){const r=S.roles;return Math.max(0,S.n-(r.mafia+r.sheriff+r.doctor+r.putana+r.maniac))}
+function club(){const n=S.n;S.roles={mafia:2,don:1,sheriff:1,doctor:0,putana:1,maniac:0,lucky:0};if(n<=10){S.roles.mafia=2;S.roles.maniac=n>=9?1:0}else if(n<=12){S.roles.mafia=3;S.roles.maniac=1;S.roles.doctor=0;S.roles.putana=1}else{S.roles.mafia=4;S.roles.maniac=1;S.roles.doctor=1;S.roles.putana=1}if(n>=10)S.roles.don=1;render();calc()}
+function render(){$("roles").innerHTML=DEFS.map(d=>`<div class="role"><b>${d.name}</b><div class="meta">${d.info}</div><div class="stepper"><button data-d="${d.id}">−</button><span>${S.roles[d.id]}</span><button data-i="${d.id}">+</button></div></div>`).join("");$("seats").textContent=`мирных ${civ()}${S.roles.lucky?" в т.ч. везунчик":""} · всего ${S.n}`}
 function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
-function maybeFix(){while(civilians()-(state.roles.lucky?1:0)<0){if(state.roles.lucky)state.roles.lucky--;else if(state.roles.joker)state.roles.joker--;else if(state.roles.putana)state.roles.putana--;else if(state.roles.maniac)state.roles.maniac--;else if(state.roles.yakuza)state.roles.yakuza--;else if(state.roles.mafia>2)state.roles.mafia--;else break}renderRoles()}
-function rng(seed){let s=seed|0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
-function pick(a,rnd){return a[Math.floor(rnd()*a.length)]}
-function alive(ps){return ps.filter(p=>p.alive)}
-function buildPlayers(){const r=state.roles,ps=[];let id=0;const add=(role,team,ex={})=>ps.push({id:id++,role,team,alive:true,lucky:!!ex.lucky,blocked:false,knownBlack:[],checked:[]});const don=Math.min(r.don,r.mafia);if(don)add("don","mafia");for(let i=0;i<r.mafia-don;i++)add("mafia","mafia");if(r.sheriff)add("sheriff","town");if(r.doctor)add("doctor","town");if(r.putana)add("putana","town");if(r.maniac)add("maniac","maniac");for(let i=0;i<r.yakuza;i++)add("yakuza","yakuza");if(r.joker)add("joker","joker");let civ=civilians();if(r.lucky){if(civ>0)civ--;add("lucky","town",{lucky:true})}for(let i=0;i<civ;i++)add("civilian","town");return ps}
-function nightSeconds(ps){const a=alive(ps);let s=40;if(a.some(p=>p.role==="putana"))s+=15;if(a.some(p=>p.team==="mafia"))s+=(state.mafiaBloc||state.exp==="exp")?22:35;if(a.some(p=>p.role==="don"))s+=12;if(a.some(p=>p.team==="yakuza"))s+=22;if(a.some(p=>p.role==="maniac"))s+=15;if(a.some(p=>p.role==="doctor"))s+=15;if(a.some(p=>p.role==="sheriff"))s+=20;return s}
-function daySeconds(k){return k*state.speech+120+50}
-function lynchAccuracy(ps,info,day){let acc=state.exp==="novice"?0.20:state.exp==="mixed"?0.26:0.33;acc+=Math.min(0.18,info.checksBlack*0.08+info.revealedBlack*(state.reveal?0.05:0.015));if(info.sheriffAlive&&info.checksBlack)acc+=0.05;if(alive(ps).some(p=>p.team==="maniac"))acc-=0.05;if(alive(ps).some(p=>p.team==="yakuza"))acc-=0.07;if(day===1)acc-=0.07;if(!state.reveal)acc-=0.04;if(state.sheriffShoot&&info.sheriffKills)acc+=0.03;if(state.mafiaBloc){const maf=alive(ps).filter(p=>p.team==="mafia").length;acc-=Math.min(0.16,0.04+0.035*maf);if(maf>=2&&maf/alive(ps).length>=0.25)acc-=0.04}return clamp(acc,0.08,0.62)}
-function winnerCheck(ps,phase){const a=alive(ps);const maf=a.filter(p=>p.team==="mafia").length,yak=a.filter(p=>p.team==="yakuza").length,man=a.filter(p=>p.team==="maniac").length,town=a.filter(p=>p.team==="town"||p.team==="joker").length;if(!a.length)return"none";if(maf+yak+man===0)return"town";if(man&&!maf&&!yak&&!town)return"maniac";if(man&&a.length===1)return"maniac";const mw=phase==="night"?maf>=town:maf>town;const yw=phase==="night"?yak>=town:yak>town;if(maf&&!yak&&!man&&mw)return"mafia";if(yak&&!maf&&!man&&yw)return"yakuza";return null}
-function chooseLynch(ps,acc,rnd){const living=alive(ps);const hostiles=living.filter(p=>p.team==="mafia"||p.team==="yakuza"||p.team==="maniac");const townish=living.filter(p=>p.team==="town"||p.team==="joker");const maf=living.filter(p=>p.team==="mafia");let wantHostile=hostiles.length&&rnd()<acc;if(state.mafiaBloc&&maf.length>=2&&townish.length){const majority=Math.floor(living.length/2)+1;const blocPower=maf.length/majority;if(rnd()<clamp(0.22+0.35*blocPower,0.18,0.72))wantHostile=false}if(wantHostile&&hostiles.length)return pick(hostiles,rnd);if(!wantHostile&&townish.length)return pick(townish,rnd);return pick(living,rnd)}
-function simulateOne(rnd){const ps=buildPlayers();const info={checksBlack:0,revealedBlack:0,sheriffAlive:true,sheriffKills:0};let days=0,chaosNights=0,swings=0,secs=90,lastLead="town";const lead=()=>{const a=alive(ps);const maf=a.filter(p=>p.team==="mafia").length,yak=a.filter(p=>p.team==="yakuza").length,man=a.filter(p=>p.team==="maniac").length;if(man&&man>=maf&&man>=yak)return"maniac";if(yak>maf)return"yakuza";if(maf>=Math.ceil(a.length/3))return"mafia";return"town"};function kill(p,night){if(!p||!p.alive)return false;if(night&&p.lucky){p.lucky=false;return false}p.alive=false;if(state.reveal&&(p.team==="mafia"||p.team==="yakuza"))info.revealedBlack++;if(p.role==="sheriff")info.sheriffAlive=false;return true}
-for(let day=0;day<12;day++){ps.forEach(p=>p.blocked=false);const liv=()=>alive(ps);secs+=nightSeconds(ps);const putana=liv().find(p=>p.role==="putana"),doctor=liv().find(p=>p.role==="doctor"),sheriff=liv().find(p=>p.role==="sheriff"),mafias=liv().filter(p=>p.team==="mafia"),yaks=liv().filter(p=>p.team==="yakuza"),maniac=liv().find(p=>p.role==="maniac");
-if(putana){const cand=liv().filter(p=>p.id!==putana.id);if(cand.length){let t;if(state.exp==="exp"){const sh=cand.filter(p=>p.team!=="town"&&p.team!=="joker");t=sh.length&&rnd()<0.62?pick(sh,rnd):pick(cand,rnd)}else t=pick(cand,rnd);t.blocked=true}}
-const saved=new Set();if(doctor){const cand=liv();let t;if(state.exp==="exp"){const key=cand.filter(p=>p.role==="sheriff"||p.role==="putana"||p.id===doctor.id);t=rnd()<0.55&&key.length?pick(key,rnd):pick(cand,rnd)}else t=pick(cand,rnd);saved.add(t.id)}
-const targets=[];const shootAt=(team,blocked)=>{if(blocked)return;const en=liv().filter(p=>p.team!==team);if(!en.length)return;let t;if(state.exp==="exp"||state.mafiaBloc){const pri=en.filter(p=>p.role==="sheriff"||p.role==="doctor"||p.role==="putana");t=pri.length&&rnd()<0.58?pick(pri,rnd):pick(en,rnd)}else t=pick(en,rnd);targets.push(t)};
-if(mafias.length){const don=mafias.find(p=>p.role==="don");const missP=state.exp==="novice"?0.28:state.exp==="mixed"?0.12:0.02;const blockedM=mafias.some(p=>p.blocked)&&(state.exp!=="exp"||(don&&don.blocked));if(rnd()>missP)shootAt("mafia",blockedM)}
-if(yaks.length)shootAt("yakuza",yaks.every(p=>p.blocked));if(maniac)shootAt("maniac",maniac.blocked);
-if(sheriff&&!sheriff.blocked){const others=liv().filter(p=>p.id!==sheriff.id&&!sheriff.checked.includes(p.id));const pool=others.length?others:liv().filter(p=>p.id!==sheriff.id);if(pool.length){const knownLive=liv().filter(p=>sheriff.knownBlack.includes(p.id));const doShoot=state.sheriffShoot&&knownLive.length&&(state.exp==="novice"?rnd()<0.45:rnd()<0.82);if(doShoot){targets.push(pick(knownLive,rnd));info.sheriffKills++}else if(state.sheriffShoot&&!knownLive.length&&day>=2&&state.exp==="novice"&&rnd()<0.08){targets.push(pick(pool,rnd));info.sheriffKills++}else{const t=pick(pool,rnd);sheriff.checked.push(t.id);const seen=(t.team==="mafia"&&!(t.role==="don"&&state.donHidden))||t.team==="yakuza";if(seen){info.checksBlack++;sheriff.knownBlack.push(t.id)}}}}
-let deaths=0;const uniq=new Map();targets.forEach(t=>{if(t&&t.alive)uniq.set(t.id,t)});uniq.forEach(t=>{if(saved.has(t.id))return;if(kill(t,true))deaths++});if(deaths>=2)chaosNights++;let w=winnerCheck(ps,"night");if(w)return{w,days:days+.5,chaos:chaosNights,swings,secs};
-days++;const living=alive(ps);secs+=daySeconds(living.length);if(living.length<=1){w=winnerCheck(ps,"day");return{w:w||living[0].team,days,chaos:chaosNights,swings,secs}}
-const lynched=chooseLynch(ps,lynchAccuracy(ps,info,days),rnd);if(days===1&&lynched.role==="joker")return{w:"joker",days,chaos:chaosNights,swings,secs};kill(lynched);const now=lead();if(now!==lastLead){swings++;lastLead=now}w=winnerCheck(ps,"day");if(w)return{w,days,chaos:chaosNights,swings,secs}}
-return{w:lead(),days,chaos:chaosNights,swings,secs}}
-function simulate(nGames){const rnd=rng((Date.now()^(state.n*997))>>>0);const tall={town:0,mafia:0,maniac:0,yakuza:0,joker:0,none:0};let days=0,chaos=0,swings=0,secs=0;for(let i=0;i<nGames;i++){const r=simulateOne(rnd);tall[r.w]=(tall[r.w]||0)+1;days+=r.days;chaos+=r.chaos;swings+=r.swings;secs+=r.secs}const f=k=>tall[k]/nGames;return{p:{town:f("town"),mafia:f("mafia"),maniac:f("maniac"),yakuza:f("yakuza"),joker:f("joker")},days:days/nGames,chaosRate:chaos/Math.max(1,days),intrigue:swings/nGames,mins:secs/nGames/60,games:nGames}}
-function warnings(res){const w=[];if(state.n<8)w.push({t:"warn",m:"Меньше 8 — тесно."});if(state.n>16)w.push({t:"warn",m:"Больше 16 — два стола."});if(civilians()-(state.roles.lucky?1:0)<0)w.push({t:"warn",m:"Ролей больше, чем игроков."});if(state.mafiaBloc&&res.p.mafia>0.52)w.push({t:"warn",m:"Блок голосов уже тянет к мафии."});if(res.p.mafia>0.55)w.push({t:"warn",m:"Перекос в мафию."});if(res.p.town>0.68&&!state.roles.maniac)w.push({t:"warn",m:"Город слишком силён. +1 мафия."});if(state.roles.lucky)w.push({t:"ok",m:"Везунчик — мирный: тот же N, плюс один сорванный ночной выстрел."});if(res.mins>90)w.push({t:"warn",m:"Партия около 1.5 ч и дольше."});if(!w.length)w.push({t:"ok",m:"Рабочий коридор."});return w}
-function pct(x){return(x*100).toFixed(1)+"%"}
-function renderOut(res){const r=state.roles;const parts=[r.mafia+" мафии"+(r.don?" (дон)":"")];if(r.sheriff)parts.push("шериф");if(r.doctor)parts.push("доктор");if(r.putana)parts.push("путана");if(r.maniac)parts.push("маньяк");if(r.yakuza)parts.push("якудза×"+r.yakuza);if(r.joker)parts.push("джокер");parts.push("мирные×"+civilians()+(r.lucky?" в т.ч. везунчик":""));const lo=Math.max(12,Math.round(res.mins*0.88)),hi=Math.round(res.mins*1.14);
-$("deck").innerHTML=`<b>Колода:</b> ${parts.join(" · ")}<br><span style="color:#9a8f84">${state.mafiaBloc?"мафия голосует блоком":"голоса мафии не сведены"} · речь ${state.speech}с</span>`;
-const cols=[["town","var(--town)","Город"],["mafia","var(--mafia)","Мафия"],["maniac","var(--maniac)","Маньяк"],["yakuza","var(--yakuza)","Якудза"],["joker","var(--joker)","Джокер"]].filter(([k])=>res.p[k]>0.008||k==="mafia"||k==="town");
-$("pbar").innerHTML=cols.map(([k,c])=>`<i style="width:${(res.p[k]*100).toFixed(2)}%;background:${c}"></i>`).join("");$("plab").textContent=cols.map(([k,_,n])=>n+" "+pct(res.p[k])).join(" · ");
-$("nsim").textContent=res.games+" партий";$("s-time").textContent=lo+"–"+hi+" мин";$("s-days").textContent=res.days.toFixed(1);$("s-chaos").textContent=pct(Math.min(1,res.chaosRate));$("s-intr").textContent=res.intrigue.toFixed(2);
-$("warns").innerHTML=warnings(res).map(x=>`<div class="${x.t}">${x.m}</div>`).join("");
-const altM=r.mafia+(res.p.town>0.62?1:res.p.mafia>0.55?-1:0);$("alt").textContent=altM!==r.mafia&&altM>=2?`Альтернатива: ${altM} мафии вместо ${r.mafia}`:"";
-$("meth").innerHTML=`День: живые × ${state.speech}с + 2 мин обсуждение + ~50с голосование. Ночь: ~40с + 12–35с на ночную роль.<br><br>Везунчик — мирный, не отдельная сторона. Первый ночной выстрел по нему срывается, днём вешают как обычного. Город от него только сильнее.`;}
-function bind(){$("n").onchange=()=>{state.n=clamp(+$("n").value,6,20);$("n").value=state.n;maybeFix();recalc()};$("exp").onchange=()=>{state.exp=$("exp").value;if(state.exp==="exp")state.mafiaBloc=true;const el=document.querySelector('[data-k="mafiaBloc"]');if(el)el.classList.toggle("on",state.mafiaBloc);recalc()};$("prio").onchange=()=>{state.prio=$("prio").value;recalc()};$("speech").onchange=()=>{state.speech=clamp(+$("speech").value,20,180);$("speech").value=state.speech;recalc()};document.querySelectorAll(".toggle").forEach(t=>t.onclick=()=>{state[t.dataset.k]=!state[t.dataset.k];t.classList.toggle("on",state[t.dataset.k]);recalc()});$("roles").onclick=e=>{const id=e.target.dataset.inc||e.target.dataset.dec;if(!id)return;const def=ROLE_DEF.find(x=>x.id===id);let v=state.roles[id]+(e.target.dataset.inc?1:-1);v=Math.max(0,Math.min(def.max,v));if(id==="mafia")v=Math.max(v,state.roles.don);if(id==="don"&&v===1)state.roles.mafia=Math.max(state.roles.mafia,1);state.roles[id]=v;renderRoles();recalc()};$("btn-rec").onclick=()=>{recommend();renderRoles();recalc()}}
-let timer=null;function recalc(){clearTimeout(timer);timer=setTimeout(()=>renderOut(simulate(state.n<=14?1100:800)),30)}
-recommend();renderRoles();bind();recalc();
+function clocks(){const r=S.roles,M=r.mafia,Man=r.maniac,N=S.n,T=N-M-Man,hasS=!!r.sheriff,hasD=!!r.doctor,hasP=!!r.putana,hasL=!!r.lucky;
+function mafiaPerfect(){let m=M,t=T,man=Man,nights=0,votes=0;if(m<=0)return{nights:0,votes:0};for(let i=0;i<20;i++){nights++;if(t>0)t--;else if(man)man--;if(man===0&&m>=t)return{nights,votes,phase:"после ночи"};votes++;if(t>0)t--;else if(man)man--;if(man===0&&m>=t)return{nights,votes,phase:"после дня"}}return{nights,votes,phase:"лимит"}}
+function townVotesOnly(){let m=M,t=T,man=Man,nights=0,votes=0;for(let i=0;i<20;i++){nights++;if(t>0)t--;if(m<=0&&man<=0)return{nights,votes};if(man===0&&m>=t)return{fail:true,nights,votes};votes++;if(m>0)m--;else if(man)man--;if(m<=0&&man<=0)return{nights,votes}}return{nights,votes,fail:true}}
+function townSlots(){let m=M,t=T,man=Man,nights=0,votes=0,checked=false,lucky=hasL;const log=[];for(let i=0;i<20;i++){nights++;let shot=true;if(hasP&&m>0){shot=false;log.push("Н"+nights+": путана блок мафии")}if(hasS){if(!checked){checked=true;log.push("Н"+nights+": шериф проверяет")}else if(m>0){m--;log.push("Н"+nights+": шериф стреляет мафию")}}if(shot){if(hasD)log.push("Н"+nights+": доктор сейв");else if(lucky){lucky=false;log.push("Н"+nights+": везунчик сейв")}else if(t>0){t--;log.push("Н"+nights+": мафия убивает мирного")}}if(m<=0&&man<=0)return{nights,votes,log};if(man===0&&m>=t)return{fail:true,nights,votes,log};votes++;if(m>0){m--;log.push("Д"+votes+": город вешает мафию")}else if(man){man--;log.push("Д"+votes+": город вешает маньяка")}if(m<=0&&man<=0)return{nights,votes,log}}return{nights,votes,fail:true,log}}
+function maniacPath(){if(!Man)return null;let m=M,t=T,nights=0,votes=0;for(let i=0;i<24;i++){nights++;if(m>0)m--;else if(t>0)t--;if(m>0&&t>0)t--;if(m===0&&t<=1)return{nights,votes,win:"маньяк"};votes++;if(m>0)m--;if(m===0&&t<=0)return{nights,votes,win:"маньяк"}}return{nights,votes,win:"не доходит"}}
+const mp=mafiaPerfect(),tv=townVotesOnly(),ts=townSlots(),mn=maniacPath();
+const daysEst=Math.max(mp.votes||0,tv.fail?mp.votes:tv.votes);const avgAlive=Math.max(4,N-daysEst*1.6);
+const mins=Math.round((90+daysEst*(avgAlive*S.speech+120+50)+(daysEst+1)*90)/60);
+return{M,T,Man,N,mp,tv,ts,mn,mins}}
+function calc(){const c=clocks();
+const clubNote=(c.N>=11&&c.N<=12&&c.M===3)?"Клуб «Синдикат» (12 тыс. партий): на 12 игроках 3 мафии+путана+шериф+маньяк город ~51%, мафия ~32%, маньяк ~17%.":(c.N>=13&&c.M===4)?"В том же клубе 4 мафии ставят с 13+, и тогда включают доктора. Город всё ещё ~50%.":"На 12 игроках клубы ставят 3 мафии, не 4. 4 мафии — стол 13–15.";
+let html=`<h2>Часы</h2><div class="clock"><div class="k">Мафия, если город никого не находит</div><div class="t">${c.mp.votes} дневных голосования · ${c.mp.nights} ночи</div><div class="hint">Победа ${c.mp.phase}. Ночь −1 мирный, днём вешают мирного.</div></div>
+<div class="clock"><div class="k">Город, только дневные голосования</div><div class="t">${c.tv.fail?"не успевают":c.tv.votes+" голосования · "+c.tv.nights+" ночи"}</div><div class="hint">${c.tv.fail?"Даже вешая мафию каждый день, ночной темп опережает.":"Каждый день вешают одну мафию, ночью город теряет тело."}</div></div>
+<div class="clock"><div class="k">Город + путана + шериф-выстрел + доктор</div><div class="t">${c.ts.fail?"мафия обгоняет":c.ts.votes+" голосования · "+c.ts.nights+" ночи"}</div><div class="hint">Верхняя оценка: путана блокирует мафию, шериф со 2-й ночи стреляет чёрного, доктор закрывает промах.</div></div>`;
+if(c.ts.log)html+=`<div class="hint">`+c.ts.log.slice(0,8).join("<br>")+`</div>`;
+if(c.mn)html+=`<div class="clock"><div class="k">Маньяк (сначала мафия)</div><div class="t">${c.mn.nights} ночи · ${c.mn.votes} дней → ${c.mn.win}</div><div class="hint">Пока жива мафия — бьёт её. Потом добирает мирных.</div></div>`;
+html+=`<div class="clock"><div class="k">Время вечера</div><div class="t">~${c.mins} мин</div><div class="hint">Речь ${S.speech}с × живые + 2 мин общее + голосование + ночь.</div></div>`;
+html+=`<div class="${c.M>=4&&c.N<=12?"warn":"ok"}">${clubNote}</div>`;
+if(c.M===4&&c.N===12)html+=`<div class="warn">12 и 4 мафии по клубам — перекос. Путана+стреляющий шериф+доктор тянут к городу. Живой коридор ~40–55% города, если стол умеет находить. Не 3% и не 25%.</div>`;
+html+=`<p class="hint">Точный % не рисуем: прошлый симулятор занижал город, потому что «сплочённый блок» отменял обучение стола. Часы — границы, между ними живая партия.</p>`;
+$("out").innerHTML=html}
+$("n").onchange=()=>{S.n=clamp(+$("n").value,6,20);$("n").value=S.n;if(civ()<0)S.roles.mafia=Math.max(2,S.roles.mafia-1);render();calc()};
+$("speech").onchange=()=>{S.speech=clamp(+$("speech").value,20,180);calc()};
+$("rec").onclick=club;
+$("roles").onclick=e=>{const id=e.target.dataset.i||e.target.dataset.d;if(!id)return;const def=DEFS.find(x=>x.id===id);let v=S.roles[id]+(e.target.dataset.i?1:-1);v=clamp(v,0,def.max);if(id==="mafia")v=Math.max(v,S.roles.don);if(id==="don"&&v===1)S.roles.mafia=Math.max(S.roles.mafia,1);S.roles[id]=v;render();calc()};
+club();
 </script></body></html>
