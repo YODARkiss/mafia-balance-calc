@@ -1,14 +1,13 @@
 # Стол — калькулятор мафии
 
-Калькулятор баланса и тайминга для ведущего. Живой HTML, без сервера.
+Один HTML-файл, без сервера. Открывается через htmlpreview.
 
-## Открыть
+## Открыть на телефоне
 
-- Репозиторий: https://github.com/YODARkiss/mafia-balance-calc
-- GitHub Pages: https://yodarkiss.github.io/mafia-balance-calc/
-- Если Pages ещё не поднялся: https://htmlpreview.github.io/?https://github.com/YODARkiss/mafia-balance-calc/blob/main/index.html
-- Зеркало: https://raw.githack.com/YODARkiss/mafia-balance-calc/main/index.html
+https://htmlpreview.github.io/?https://github.com/YODARkiss/mafia-balance-calc/blob/main/index.html
+
+Репозиторий: https://github.com/YODARkiss/mafia-balance-calc
 
 Документация формул: [DOCS.md](DOCS.md)
 
-Версия: 2026-08-28 (тайминг, маньяк вместо мафии, состав ролей).
+Версия: 2026-08-29 — один файл (как раньше), тайминг маньяка, состав ролей.
