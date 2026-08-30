@@ -6,6 +6,6 @@
 
 https://htmlpreview.github.io/?https://github.com/YODARkiss/mafia-balance-calc/blob/main/index.html
 
-Если кэш: https://htmlpreview.github.io/?https://github.com/YODARkiss/mafia-balance-calc/blob/main/index.html&v=16
+Если кэш: https://htmlpreview.github.io/?https://github.com/YODARkiss/mafia-balance-calc/blob/main/index.html&v=17
 
 Документация: [DOCS.md](DOCS.md)
